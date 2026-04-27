@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexar</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="icon" type="image/x-icon" href="https://i.ibb.co/W4xzgVsH/favicon.png">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --text: #f0f0f0;
+    --muted: #888;
+    --radius: 20px;
+    --radius-lg: 32px;
+    --radius-xl: 48px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(15,15,15,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  nav .logo img { height: 36px; display: block; }
+  nav .nav-links { display: flex; gap: 32px; list-style: none; }
+  nav .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+  nav .nav-links a:hover { color: var(--text); }
+  nav .nav-cta {
+    background: var(--text); color: var(--bg);
+    border: none; border-radius: 100px; padding: 10px 22px;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: opacity .2s;
+  }
+  nav .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 120px 24px 80px;
+    position: relative; overflow: hidden;
+  }
+  #hero::before {
+    content: '';
+    position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.035) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 100px; padding: 8px 16px; margin-bottom: 40px;
+    font-size: 13px; color: var(--muted); font-weight: 500;
+    opacity: 0; animation: fadeUp .8s .1s forwards;
+  }
+  .hero-badge span { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; display: inline-block; }
+  .hero-title {
+    font-size: clamp(48px, 8vw, 100px); font-weight: 800;
+    line-height: 1.0; letter-spacing: -0.03em; max-width: 900px;
+    opacity: 0; animation: fadeUp .8s .25s forwards;
+  }
+  .hero-title em { font-style: normal; color: var(--muted); }
+  .hero-sub {
+    margin-top: 28px; font-size: 18px; color: var(--muted); font-weight: 400;
+    max-width: 480px;
+    opacity: 0; animation: fadeUp .8s .4s forwards;
+  }
+  .hero-actions {
+    margin-top: 48px;
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp .8s .55s forwards;
+  }
+  .btn-primary {
+    background: var(--text); color: var(--bg);
+    border: none; border-radius: 100px; padding: 16px 32px;
+    font-family: inherit; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,255,255,0.15); }
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border); border-radius: 100px; padding: 16px 32px;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 8px;
+  }
+  .btn-secondary:hover { border-color: var(--muted); }
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    opacity: 0; animation: fadeUp .8s .8s forwards;
+  }
+  .scroll-line { width: 1px; height: 40px; background: var(--border); animation: scrollPulse 2s infinite; }
+
+  /* SOBRE */
+  #sobre { padding: 120px 48px; max-width: 1100px; margin: 0 auto; }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 32px;
+  }
+  .section-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--muted); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .about-headline { font-size: clamp(36px, 4vw, 52px); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+  .about-headline em { font-style: normal; color: var(--muted); }
+  .about-text { color: var(--muted); font-size: 17px; line-height: 1.8; }
+  .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .stat-num { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; }
+  .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* PROJETOS */
+  #projetos { padding: 120px 48px; max-width: 1100px; margin: 0 auto; }
+  .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
+  .section-title { font-size: clamp(32px, 4vw, 48px); font-weight: 800; letter-spacing: -0.02em; }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+    transition: transform .3s, border-color .3s; cursor: pointer;
+  }
+  .project-card:hover { transform: translateY(-6px); border-color: #444; }
+  .project-img { width: 100%; aspect-ratio: 16/10; overflow: hidden; }
+  .project-img svg, .project-img img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .project-body { padding: 24px; }
+  .project-tag { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .project-name { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .project-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .project-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .project-tech { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tech-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; padding: 4px 10px; font-size: 11px; color: var(--muted); }
+  .project-arrow { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all .2s; }
+  .project-card:hover .project-arrow { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* SERVIÇOS */
+  #servicos { padding: 120px 48px; max-width: 1100px; margin: 0 auto; }
+  .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 48px; }
+  .service-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; transition: border-color .3s, transform .3s; }
+  .service-card:hover { border-color: #444; transform: translateY(-3px); }
+  .service-icon { width: 52px; height: 52px; border-radius: var(--radius); background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 24px; }
+  .service-name { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .service-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* PROCESSO */
+  #processo { padding: 120px 48px; max-width: 1100px; margin: 0 auto; }
+  .process-intro { font-size: clamp(28px, 3vw, 42px); font-weight: 800; letter-spacing: -0.02em; max-width: 600px; margin-bottom: 64px; }
+  .process-intro em { font-style: normal; color: var(--muted); }
+  .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px 28px; transition: border-color .3s; }
+  .step:hover { border-color: #444; }
+  .step-num { font-size: 64px; font-weight: 800; color: rgba(255,255,255,0.06); line-height: 1; margin-bottom: 24px; letter-spacing: -0.04em; }
+  .step-icon { width: 44px; height: 44px; border-radius: 14px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px; }
+  .step-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .step-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* CONTATO */
+  #contato { padding: 120px 48px; max-width: 1100px; margin: 0 auto; }
+  .contact-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 80px; text-align: center; }
+  .contact-headline { font-size: clamp(32px, 4vw, 56px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
+  .contact-sub { font-size: 17px; color: var(--muted); margin-bottom: 48px; }
+  .contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .contact-link { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; padding: 14px 24px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600; transition: all .2s; }
+  .contact-link:hover { border-color: var(--muted); transform: translateY(-2px); }
+  .contact-link.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .contact-link.primary:hover { opacity: 0.9; }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--border); padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 13px; }
+  footer img { height: 28px; opacity: 0.5; }
+
+  .divider { height: 1px; background: var(--border); max-width: 1100px; margin: 0 auto; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scrollPulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav .nav-links { display: none; }
+    #hero, #sobre, #projetos, #servicos, #processo, #contato { padding-left: 20px; padding-right: 20px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .contact-box { padding: 40px 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+  @media (max-width: 480px) {
+    .process-steps { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <img src="https://i.ibb.co/DHw11p9s/image.png" alt="Nexar">
+  </div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#processo">Processo</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">Falar comigo</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">
+    <span></span>
+    Disponível para novos projetos
+  </div>
+  <h1 class="hero-title">
+    Criamos sites que<br><em>não parecem</em><br>comuns.
+  </h1>
+  <p class="hero-sub">Web design e desenvolvimento focado em experiência, performance e identidade.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('projetos').scrollIntoView({behavior:'smooth'})">
+      🖥️ Ver projetos
+    </button>
+    <button class="btn-secondary" onclick="document.getElementById('sobre').scrollIntoView({behavior:'smooth'})">
+      Sobre a Nexar →
+    </button>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="section-tag">Sobre</div>
+  <div class="about-grid">
+    <div>
+      <h2 class="about-headline reveal">
+        Web studio.<br><em>Focado em</em><br>resultado.
+      </h2>
+    </div>
+    <div>
+      <p class="about-text reveal">
+        Nexar é um web studio focado em criar sites modernos, rápidos e memoráveis. Cada projeto é construído do zero, com foco em design, experiência e performance.
+      </p>
+      <div class="about-stats">
+        <div class="stat-card reveal">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">✦ Custom design</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-num">Fast</div>
+          <div class="stat-label">⚡ Performance first</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-num">Zero</div>
+          <div class="stat-label">🧩 Templates prontos</div>
+        </div>
+        <div class="stat-card reveal">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">🔁 Revisões inclusas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJETOS -->
+<section id="projetos">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Projetos</div>
+      <h2 class="section-title">Projetos recentes</h2>
+    </div>
+  </div>
+  <div class="projects-grid">
+
+    <!-- ═══ PROJETO 1: Coffee House ═══ -->
+     
+    <a href="https://nexarsite.github.io/site/projects/coffee_house" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; display: block;">
+  <div class="project-card reveal">
+    <div class="project-img">
+      <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+        <rect width="480" height="300" fill="#18120e"/>
+        <rect x="0" y="0" width="480" height="300" fill="rgba(201,169,110,0.03)"/>
+        <g transform="translate(192,60)">
+          <rect x="8" y="18" width="80" height="72" rx="10" fill="none" stroke="#c9a96e" stroke-width="1.8"/>
+          <path d="M88 36 Q108 36 108 58 Q108 80 88 80" fill="none" stroke="#c9a96e" stroke-width="1.8"/>
+          <rect x="0" y="90" width="96" height="7" rx="3.5" fill="#c9a96e" opacity="0.5"/>
+          <path d="M32 18 Q37 4 42 18" fill="none" stroke="#c9a96e" stroke-width="1.5" opacity="0.6"/>
+          <path d="M50 18 Q55 6 60 18" fill="none" stroke="#c9a96e" stroke-width="1.5" opacity="0.6"/>
+        </g>
+        <text x="240" y="210" text-anchor="middle" font-family="Georgia,serif" font-size="20" fill="#c9a96e" letter-spacing="8">COFFEE</text>
+        <text x="240" y="232" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7a6040" letter-spacing="12">HOUSE</text>
+        <line x1="160" y1="248" x2="320" y2="248" stroke="#2a2010" stroke-width="1"/>
+        <text x="240" y="268" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="#4a3820" letter-spacing="4">EST. 2024</text>
+      </svg>
+    </div>
+    <div class="project-body">
+      <div class="project-tag">☕ Cafeteria · Branding</div>
+      <div class="project-name">Coffee House</div>
+      <div class="project-desc">Experiência minimalista focada em atmosfera e design. Site de cafeteria premium com identidade visual refinada.</div>
+      <div class="project-footer">
+        <div class="project-tech">
+          <span class="tech-pill">HTML</span>
+          <span class="tech-pill">CSS</span>
+          <span class="tech-pill">JS</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+           <div class="project-arrow"><i class="ti ti-arrow-narrow-right" style="color: currentColor; font-size: 1.25rem;"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+    <!-- ═══ ADICIONE NOVOS PROJETOS AQUI ═══
+         Duplique o bloco abaixo e preencha com seus dados:
+
+<a href="https://ig.me/m/seu_usuario" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; display: block;">
+  <div class="project-card reveal">
+    <div class="project-card reveal">
+      <div class="project-img">
+        <img src="URL_DA_IMAGEM_DO_PROJETO" alt="Nome do Projeto">
+      </div>
+      <div class="project-body">
+        <div class="project-tag">🏷️ Categoria</div>
+        <div class="project-name">Nome do Projeto</div>
+        <div class="project-desc">Descrição breve do projeto — 1 ou 2 frases.</div>
+        <div class="project-footer">
+          <div class="project-tech">
+            <span class="tech-pill">React</span>
+            <span class="tech-pill">Next.js</span>
+          </div>
+          <div class="project-arrow"><i class="ti ti-arrow-narrow-right" style="color: currentColor; font-size: 1.25rem;"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+    ═══════════════════════════════════════ -->
+
+    <!-- Card placeholder -->
+    
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="section-tag">Serviços</div>
+  <h2 class="section-title reveal" style="margin-bottom:0">O que a Nexar faz</h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon"><i class="ti ti-palette" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="service-name">Web Design</div>
+      <div class="service-desc">Interfaces únicas pensadas para converter e impressionar. Design que comunica antes mesmo de ler.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon"><i class="ti ti-device-laptop" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="service-name">Desenvolvimento de Sites</div>
+      <div class="service-desc">Código limpo, rápido e responsivo. Do protótipo ao ar sem atalhos ou templates.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon"><i class="ti ti-bolt" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="service-name">Landing Pages</div>
+      <div class="service-desc">Páginas focadas em um único objetivo: converter. Diretas, rápidas e irresistíveis.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon"><i class="ti ti-refresh" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="service-name">Redesign de Sites</div>
+      <div class="service-desc">Transformamos sites antigos em experiências modernas. Mesmo conteúdo, novo impacto.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROCESSO -->
+<section id="processo">
+  <div class="section-tag">Processo</div>
+  <h2 class="process-intro reveal">
+    Do conceito<br>ao código.<br><em>Sem surpresas.</em>
+  </h2>
+  <div class="process-steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon"><i class="ti ti-bulb" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="step-title">Ideia</div>
+      <div class="step-text">Entendemos seu negócio, público e objetivo. A base de tudo começa aqui.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div class="step-icon"><i class="ti ti-pencil" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="step-title">Protótipo</div>
+      <div class="step-text">Wireframes e protótipos navegáveis antes de escrever uma linha de código.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div class="step-icon"><i class="ti ti-brain" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="step-title">Desenvolvimento</div>
+      <div class="step-text">Codamos com atenção a cada detalhe de performance e responsividade.</div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <div class="step-icon"><i class="ti ti-rocket" style="color: var(--text); font-size: 1.75rem;"></i></div>
+      <div class="step-title">Entrega</div>
+      <div class="step-text">Publicamos, testamos e entregamos. Suporte incluso no pós-lançamento.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="contact-box reveal">
+    <h2 class="contact-headline">Tem um projeto<br>em mente?</h2>
+    <p class="contact-sub">Vamos criar algo juntos.</p>
+    <div class="contact-links">
+      <a href="https://instagram.com/nexar.site" class="contact-link" target="_blank">
+        <i class="ti ti-brand-instagram" style="font-size: 1.5rem;"></i>
+       Instagram
+      </a>
+      <a href="mailto:nexar.site@gmail.com" class="contact-link">
+        <i class="ti ti-mail" style="font-size: 1.5rem;"></i>
+         nexar.site@gmail.com
+      </a>
+      <a href="https://ig.me/m/nexar.site" class="contact-link primary" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+  <i class="ti ti-message" style="font-size: 1.5rem;"></i>
+  Falar comigo
+</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="https://i.ibb.co/DHw11p9s/image.png" alt="Nexar">
+  <span>© 2026 Nexar Sites</span>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Stagger grid children
+  document.querySelectorAll('.projects-grid, .services-grid, .process-steps, .about-stats').forEach(grid => {
+    grid.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (i * 0.1) + 's'; });
+  });
+</script>
+</body>
+</html>
